@@ -12,6 +12,38 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import base64
+
+def set_background(image_file):
+    try:
+        with open(image_file, "rb") as image:
+            encoded = base64.b64encode(image.read()).decode()
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url("data:image/jpg;base64,{encoded}");
+                background-size: cover;
+                background-attachment: fixed;
+            }}
+            .stApp::before {{
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: rgba(255,255,255,0.4);  /* white overlay */
+                z-index: -1;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    except FileNotFoundError:
+        st.warning("⚠️ Background image not found. Running with default background.")
+
+set_background("car_bg.jpg")  # You can rename this to your own image file
 # App Title
 st.title("🚗 Car Evaluation Classifier using Random Forest & Streamlit")
 st.write("Predict the car condition using Machine Learning based on various features.")
